@@ -4,6 +4,9 @@ SRCDIR = src
 PKGDIR = pkg
 TESTDIR = test
 
+JS = node
+TSC = tsc
+
 TSCFLAGS = --removeComments --strictNullChecks --alwaysStrict --noEmitOnError \
            --target "es2016" --lib "es2016"
 
@@ -15,8 +18,6 @@ MAIN_JS = main.js
 TEST_JS = test.js
 KWINSCRIPT = $(NAME).kwinscript
 
-# You should include definition of variable "JS", which specifies your chosen
-# javascript runtime. Example values include "node".
 include config.mk
 
 all: $(KWINSCRIPT)
@@ -27,7 +28,7 @@ $(KWINSCRIPT): $(MAIN_JS) $(PKG)
 	zip -r $@ $(PKGDIR) 2>&1 1>/dev/null
 
 $(MAIN_JS): $(SRC)
-	tsc $^ $(TSCFLAGS) --outFile $@
+	$(TSC) $^ $(TSCFLAGS) --outFile $@
 	echo "main();" >> $@
 
 test: $(TEST_JS)

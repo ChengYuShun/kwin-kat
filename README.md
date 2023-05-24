@@ -22,9 +22,10 @@ make
 Test command:
 
 ```sh
-echo "JS = node" > config.mk  # or whatever interpreter you prefer
 make test
 ```
+
+You can change variables inside `Makefile` by editing the file `config.mk`.
 
 # Acknowledges
 
