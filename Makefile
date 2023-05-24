@@ -22,6 +22,7 @@ include config.mk
 all: $(KWINSCRIPT)
 
 $(KWINSCRIPT): $(MAIN_JS) $(PKG)
+	mkdir -p pkg/contents/code
 	cp -f $(MAIN_JS) pkg/contents/code/main.js
 	zip -r $@ $(PKGDIR) 2>&1 1>/dev/null
 
