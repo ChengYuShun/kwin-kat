@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "outFile": "test.js",
+        "noEmitOnError": true,
+        "strictNullChecks": true,
+        "removeComments": true,
+        "lib": ["es2016", "dom"]
+    }
+}
