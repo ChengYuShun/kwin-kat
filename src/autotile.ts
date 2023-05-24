@@ -1,8 +1,8 @@
 // Copyright 2023 Yushun Cheng <chengys@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-only
 
-class Autotile {
-    // (activity, virtual desktop, screen) -> window
+class Kat {
+    // (activity, virtual desktop, screen) -> windows
     private untiledWindows: MMMSet<string, number, number, KWin.Window>
         = new MMMSet();
 
