@@ -6,7 +6,7 @@ function main() {
     print("main");
     autotile = new Autotile();
     registerShortcut(
-        "test", "test", "Meta+Shift+Space",
+        "KatTileWindow", "KAT: Tile Window", "Meta+Shift+Space",
         () => {
             let active = workspace.activeClient;
             if (active) {
@@ -15,49 +15,49 @@ function main() {
         },
     );
     registerShortcut(
-        "swapLeft", "swapLeft", "Meta+Ctrl+H",
+        "KatSwapLeft", "KAT: Swap Left", "Meta+Ctrl+H",
         () => {
             autotile.swapDirection(Direction.Left);
         }
     );
     registerShortcut(
-        "swapRight", "swapRight", "Meta+Ctrl+L",
+        "KatSwapRight", "KAT: Swap Right", "Meta+Ctrl+L",
         () => {
             autotile.swapDirection(Direction.Right);
         }
     );
     registerShortcut(
-        "swapAbove", "swapAbove", "Meta+Ctrl+K",
+        "KatSwapAbove", "KAT: Swap Above", "Meta+Ctrl+K",
         () => {
             autotile.swapDirection(Direction.Above);
         }
     );
     registerShortcut(
-        "swapBelow", "swapBelow", "Meta+Ctrl+J",
+        "KatSwapBelow", "KAT: Swap Below", "Meta+Ctrl+J",
         () => {
             autotile.swapDirection(Direction.Below);
         }
     );
     registerShortcut(
-        "focusLeft", "focusLeft", "Meta+H",
+        "KatFocusLeft", "KAT: Focus Left", "Meta+H",
         () => {
             autotile.focusDirection(Direction.Left);
         }
     );
     registerShortcut(
-        "focusRight", "focusRight", "Meta+L",
+        "KatFocusRight", "KAT: Focus Right", "Meta+L",
         () => {
             autotile.focusDirection(Direction.Right);
         }
     );
     registerShortcut(
-        "focusAbove", "focusAbove", "Meta+K",
+        "KatFocusAbove", "KAT: Focus Above", "Meta+K",
         () => {
             autotile.focusDirection(Direction.Above);
         }
     );
     registerShortcut(
-        "focusBelow", "focusBelow", "Meta+J",
+        "KatFocusBelow", "KAT: Focus Below", "Meta+J",
         () => {
             autotile.focusDirection(Direction.Below);
         }
