@@ -12,10 +12,18 @@ class Autotile {
 
     private debug: boolean = true;
 
+    private minHeight: number = 400;
+    private minWidth: number = 500;
+
     private printDebug(...values: any[]) {
         if (this.debug) {
             print("KAT:", ...values);
         }
+    }
+
+    private checkWinGeo(win: KWin.Window): boolean {
+        let geo = win.frameGeometry;
+        return geo.height >= this.minHeight && geo.width >= this.minWidth;
     }
 
     private onActivityDesktopChanged(kwin: KWin.Window): void {
@@ -43,7 +51,7 @@ class Autotile {
             // If it is previously shared.
             if (activities.length == 1 && desktop != -1) {
                 // If it is now dedicated.
-                if (this.autotile) {
+                if (this.autotile && this.checkWinGeo(win)) {
                     // TODO: may record tiling status in the shared window.
                     this.tile(win);
                 } else {
@@ -366,7 +374,7 @@ class Autotile {
             if (tile === null) {
                 // If it should not be tiled, add it to the untiled list. May
                 // optionally tile it if autotile is enabled.
-                if (!this.autotile || !this.tile(win)) {
+                if (!(this.autotile && this.checkWinGeo(win) && this.tile(win))) {
                     this.untiledWindows.add(activity, desktop, screen, win);
                 }
             } else {
