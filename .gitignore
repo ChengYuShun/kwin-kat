@@ -1,3 +1,4 @@
 *.js
 *.kwinscript
+pkg/
 config.mk
