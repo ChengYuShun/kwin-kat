@@ -18,7 +18,9 @@ MAIN_JS = main.js
 TEST_JS = test.js
 KWINSCRIPT = $(NAME).kwinscript
 
-include config.mk
+ifneq ($(wildcard config.mk),)
+	include config.mk
+endif
 
 all: $(KWINSCRIPT)
 
