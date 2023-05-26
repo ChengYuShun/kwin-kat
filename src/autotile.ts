@@ -259,52 +259,59 @@ class Kat {
                 this.retile(activity, desktop, lastScreen);
             }
         } else {
-            // let tile = win.tile;
-            // let lastTile = win.tmpTile;
-            // win.tmpTile = tile;
+            let tile = win.tile;
+            let lastTile = win.tmpTile;
+            win.tmpTile = tile;
 
-            // // Untile it immediately if it is not the right kind of window.
-            // if (win.desktopWindow || win.popupMenu || win.popupWindow) {
-            //     win.fromAutotile = true;
-            //     win.tile = null;
-            //     win.fromAutotile = false;
-            //     return;
-            // }
+            // Untile it immediately if it is not the right kind of window.
+            if (win.desktopWindow || win.popupMenu || win.popupWindow) {
+                win.fromKAT = true;
+                win.tmpTile = win.tile = null;
+                win.fromKAT = false;
+                return;
+            }
 
-            // let desktop = win.desktop;
-            // let activities = win.activities;
+            let desktop = win.desktop;
+            let activities = win.activities;
+            let screen = win.screen;
 
-            // if (desktop != -1 && activities.length == 1) {
-            //     let activity = activities[0];
+            if (desktop != -1 && activities.length == 1) {
+                let activity = activities[0];
 
-            //     // First of all delete it, so there are space for insert.
-            //     if (lastTile !== null) {
-            //         this.tileMap.tryDelWindow(activity, desktop, lastTile);
-            //     }
-            //     // Try to add it to the map.
-            //     if (this.tileMap.tryAddWindow(activity, desktop, tile, win)) {
-            //         this.untiledWindows.delete(
-            //             activity, desktop, win.screen, win,
-            //         );
-            //         this.untiledWindows.delete(
-            //             activity, desktop, win.tmpScreen, win,
-            //         );
-            //         if (win.fullScreen) {
-            //             win.fromAutotile = true;
-            //             win.tile = null;
-            //             win.fromAutotile = false;
-            //         }
-            //     } else {
-            //         win.fromAutotile = true;
-            //         win.tile = null;
-            //         win.fromAutotile = false;
-            //     }
-            // } else {
-            //     // If it is shared, untile it immediately.
-            //     win.fromAutotile = true;
-            //     win.tile = null;
-            //     win.fromAutotile = false;
-            // }
+                // First of all delete it, so there are space for insert.
+                if (lastTile !== null) {
+                    this.tileMap.tryDelWindow(activity, desktop, lastTile);
+                }
+                // Try to add it to the map.
+                if (this.tileMap.tryAddWindow(activity, desktop, tile, win)) {
+                    this.untiledWindows.delete(
+                        activity, desktop, screen, win,
+                    );
+                    this.untiledWindows.delete(
+                        activity, desktop, win.tmpScreen, win,
+                    );
+                    if (win.fullScreen) {
+                        win.fromKAT = true;
+                        win.tile = null;
+                        win.fromKAT = false;
+                    }
+                } else {
+                    // Tile it automatically if it cannot be inserted into the
+                    // map directly.
+                    win.fromKAT = true;
+                    win.tmpTile = win.tile = null;
+                    win.fromKAT = false;
+                    this.untiledWindows.add(activity, desktop, screen, win);
+                    if (this.autotile && this.checkWinGeo(win)) {
+                        this.tile(win);
+                    }
+                }
+            } else {
+                // If it is shared, untile it immediately.
+                win.fromKAT = true;
+                win.tile = null;
+                win.fromKAT = false;
+            }
         }
     }
 
