@@ -21,9 +21,16 @@ class Kat {
         }
     }
 
+    // Return whether the geometry of the window is large enough to be
+    // automatically tiled.
     private checkWinGeo(win: KWin.Window): boolean {
         let geo = win.frameGeometry;
         return geo.height >= this.minHeight && geo.width >= this.minWidth;
+    }
+
+    // Return whether the window should be automatically tiled.
+    private autotileWin(win: KWin.Window): boolean {
+        return this.autotile && this.checkWinGeo(win);
     }
 
     private onActivityDesktopChanged(kwin: KWin.Window): void {
@@ -51,7 +58,7 @@ class Kat {
             // If it is previously shared.
             if (activities.length == 1 && desktop != -1) {
                 // If it is now dedicated.
-                if (this.autotile && this.checkWinGeo(win)) {
+                if (this.autotileWin(win)) {
                     // TODO: may record tiling status in the shared window.
                     this.tile(win);
                 } else {
@@ -302,7 +309,7 @@ class Kat {
                     win.tmpTile = win.tile = null;
                     win.fromKAT = false;
                     this.untiledWindows.add(activity, desktop, screen, win);
-                    if (this.autotile && this.checkWinGeo(win)) {
+                    if (this.autotileWin(win)) {
                         this.tile(win);
                     }
                 }
@@ -380,7 +387,7 @@ class Kat {
             if (tile === null) {
                 // If it should not be tiled, add it to the untiled list. May
                 // optionally tile it if autotile is enabled.
-                if (!(this.autotile && this.checkWinGeo(win) && this.tile(win))) {
+                if (!(this.autotileWin(win) && this.tile(win))) {
                     this.untiledWindows.add(activity, desktop, screen, win);
                 }
             } else {
