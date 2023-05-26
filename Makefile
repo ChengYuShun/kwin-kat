@@ -31,10 +31,16 @@ install: $(KWINSCRIPT) uninstall
 uninstall:
 	$(PKGTOOL) --remove $(KWINSCRIPT)
 
-$(KWINSCRIPT): $(MAIN_JS) res/metadata.json
+$(KWINSCRIPT): $(MAIN_JS) res/metadata.json res/config.xml res/config.ui
 	mkdir -p pkg
 
 	sed "s/%VERSION%/$(VERSION)/" res/metadata.json > pkg/metadata.json
+
+	mkdir -p pkg/contents/config
+	cp -f res/config.xml pkg/contents/config/main.xml
+
+	mkdir -p pkg/contents/ui
+	cp -f res/config.ui pkg/contents/ui/config.ui
 
 	mkdir -p pkg/contents/code
 	cp -f $(MAIN_JS) pkg/contents/code/main.js

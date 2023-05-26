@@ -8,12 +8,15 @@ class Kat {
 
     private tileMap: TileMap<KWin.Window, KWin.Tile> = new TileMap();
 
-    private autotile: boolean = true;
+    // Whether to automatically tile windows or not.
+    private autotile: boolean;
 
-    private debug: boolean = true;
+    // Minimum width and height for automatic tiling.
+    private minHeight: number;
+    private minWidth: number;
 
-    private minHeight: number = 400;
-    private minWidth: number = 500;
+    // Whether to output debug info or not.
+    private debug: boolean;
 
     private printDebug(...values: any[]) {
         if (this.debug) {
@@ -410,17 +413,25 @@ class Kat {
         return win;
     }
 
+    private loadConfig() {
+        this.autotile = readConfig("autotile", true);
+        this.minWidth = readConfig("minWidth", 500);
+        this.minHeight = readConfig("minHeight", 350);
+        this.debug = readConfig("debug", false);
+    }
+
     constructor() {
+        this.loadConfig();
+
         for (let window of workspace.clientList()) {
             this.newWindow(window);
         }
 
-        this.printDebug("before binding added");
         workspace.clientAdded.connect(this.newWindow.bind(this))
         workspace.clientRemoved.connect(this.onWindowClosed.bind(this));
-        this.printDebug("after binding added");
 
-        // TODO: bind callbacks for options
+        // This won't actually be invoked for now.
+        options.configChanged.connect(this.loadConfig.bind(this));
     }
 
     swapDirection(direction: Direction): boolean {
