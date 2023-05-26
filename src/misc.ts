@@ -10,7 +10,7 @@ namespace KWin {
         tmpDesktop?: number | null,
         tmpScreen?: number,
         // Whether the operation comes from autotile.
-        fromAutotile?: boolean,
+        fromKAT?: boolean,
     }
 
     export namespace LayoutDirection {
@@ -26,7 +26,7 @@ interface Win extends KWin.Window {
     tmpActivity: string | null;
     tmpDesktop: number | null;
     tmpScreen: number;
-    fromAutotile: boolean,
+    fromKAT: boolean,
 }
 
 function rectEq(rect1: QRectF, rect2: QRectF): boolean {

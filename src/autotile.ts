@@ -27,7 +27,7 @@ class Kat {
     }
 
     private onActivityDesktopChanged(kwin: KWin.Window): void {
-        if (kwin.fromAutotile === true) {
+        if (kwin.fromKAT === true) {
             return;
         }
 
@@ -87,9 +87,9 @@ class Kat {
                         lastDesktop,
                         tile,
                     );
-                    win.fromAutotile = true;
+                    win.fromKAT = true;
                     win.tmpTile = win.tile = null;
-                    win.fromAutotile = false;
+                    win.fromKAT = false;
                 }
             } else {
                 // If it is still dedicated.
@@ -115,9 +115,9 @@ class Kat {
                             .tryDelWindow(lastActivity, lastDesktop, tile);
                         this.retile(lastActivity, lastDesktop, win.screen);
                     }
-                    win.fromAutotile = true;
+                    win.fromKAT = true;
                     win.tmpTile = win.tile = null;
-                    win.fromAutotile = false;
+                    win.fromKAT = false;
                     this.tile(win);
                 }
             }
@@ -176,7 +176,7 @@ class Kat {
     // }
 
     private onFullScreenChanged(kwin: KWin.Window): void {
-        if (kwin.fromAutotile === true) {
+        if (kwin.fromKAT === true) {
             return;
         }
 
@@ -191,20 +191,19 @@ class Kat {
 
         if (win.fullScreen === true) {
             win.tmpTile = win.tile;
+            win.fromKAT = true
             win.tile = null;
+            win.fromKAT = false;
         } else {
-            // If it is recovered from full screen, we will recover the tile,
-            // and see if we can tile it back.
-            let tile = win.tmpTile;
-            // This has to be set as null, indicating its previous state
-            // honestly.
-            win.tmpTile = null;
-            win.tile = tile;
+            // If it is recovered from full screen, we will recover the tile.
+            win.fromKAT = true;
+            win.tile = win.tmpTile;
+            win.fromKAT = false;
         }
     }
 
     private onGeometryChanged(kwin: KWin.Window): void {
-        if (kwin.fromAutotile === true) {
+        if (kwin.fromKAT === true) {
             return;
         }
 
@@ -226,7 +225,7 @@ class Kat {
     }
 
     private onTileChanged(kwin: KWin.Window): void {
-        if (kwin.fromAutotile === true) {
+        if (kwin.fromKAT === true) {
             return;
         }
 
@@ -319,7 +318,7 @@ class Kat {
             if (tile !== null && tile !== undefined) {
                 this.tileMap.tryDelWindow(activity, desktop, tile);
             }
-            kwin.fromAutotile = true;
+            kwin.fromKAT = true;
             kwin.tmpTile = kwin.tile = null;
             this.retile(activity, desktop, kwin.screen);
         }
@@ -339,7 +338,7 @@ class Kat {
         kwin.tmpDesktop = desktop == -1 ? null : desktop;
         kwin.tmpScreen = kwin.screen;
         kwin.initialized = null;
-        kwin.fromAutotile = false;
+        kwin.fromKAT = false;
         let tile = kwin.tmpTile = kwin.tile;
         let win = kwin as Win;
 
@@ -361,9 +360,9 @@ class Kat {
 
         // Untile it if it is in full screen.
         if (win.fullScreen) {
-            win.fromAutotile = true;
+            win.fromKAT = true;
             win.tile = null;
-            win.fromAutotile = false;
+            win.fromKAT = false;
         }
 
         // If it is dedicated.
@@ -383,9 +382,9 @@ class Kat {
                 if (!this.tileMap.tryAddWindow(activity, desktop, tile, win)) {
                     // If the insertion is not successful, we may tile it again
                     // automatically.
-                    win.fromAutotile = true;
+                    win.fromKAT = true;
                     win.tmpTile = win.tile = null;
-                    win.fromAutotile = false;
+                    win.fromKAT = false;
                     if (!this.tile(win)) {
                         this.untiledWindows
                             .add(activity, desktop, screen, win);
@@ -467,16 +466,16 @@ class Kat {
         this.tileMap.tryDelWindow(activity, desktop, tile);
         this.tileMap.tryAddWindow(activity, desktop, newTile, activeWin);
         if (!activeWin.fullScreen) {
-            activeWin.fromAutotile = true;
+            activeWin.fromKAT = true;
             activeWin.tile = newTile;
-            activeWin.fromAutotile = false;
+            activeWin.fromKAT = false;
         }
         activeWin.tmpTile = newTile;
         if (newNode !== undefined) {
             if (!newNode.fullScreen) {
-                newNode.fromAutotile = true;
+                newNode.fromKAT = true;
                 newNode.tile = tile;
-                newNode.fromAutotile = false;
+                newNode.fromKAT = false;
             }
             newNode.tmpTile = tile;
             this.tileMap.tryAddWindow(activity, desktop, tile, newNode);
@@ -564,11 +563,11 @@ class Kat {
             if (root !== undefined && this.tileMap.tryTileWindow(
                 activity, desktop, root, win,
                 (w, t) => {
-                    w.fromAutotile = true;
+                    w.fromKAT = true;
                     this.printDebug("settings window");
                     w.fullScreen ? w.tmpTile = t : w.tmpTile = w.tile = t;
                     // w.tmpTile = w.tile = t;
-                    w.fromAutotile = false;
+                    w.fromKAT = false;
                 },
             )) {
                 this.untiledWindows.delete(activity, desktop, screen, win);
@@ -621,10 +620,10 @@ class Kat {
 
         // Retile all windows.
         for (let [w, t] of retileMap) {
-            w.fromAutotile = true;
+            w.fromKAT = true;
             w.fullScreen ? w.tmpTile = t : w.tmpTile = w.tile = t;
             // w.tmpTile = w.tile = t;
-            w.fromAutotile = false;
+            w.fromKAT = false;
         }
     }
 }
