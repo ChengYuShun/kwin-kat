@@ -10,6 +10,7 @@ TEST = $(shell find $(TESTDIR) -type f -name '*.ts')
 
 JS = node
 TSC = tsc
+PKGTOOL = kpackagetool5
 
 TSCFLAGS = --removeComments --strictNullChecks --alwaysStrict --noEmitOnError \
            --target "es2016" --lib "es2016"
@@ -23,6 +24,12 @@ ifneq ($(wildcard config.mk),)
 endif
 
 all: $(KWINSCRIPT)
+
+install: $(KWINSCRIPT) uninstall
+	$(PKGTOOL) --install $<
+
+uninstall:
+	$(PKGTOOL) --remove $(KWINSCRIPT)
 
 $(KWINSCRIPT): $(MAIN_JS) res/metadata.json
 	mkdir -p pkg
@@ -47,4 +54,4 @@ $(TEST_JS): $(SRC) $(TEST)
 clean:
 	rm -rf $(KWINSCRIPT) $(MAIN_JS) $(TEST_JS) pkg
 
-.PHONY: all test clean
+.PHONY: all install uninstall test clean
